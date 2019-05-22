@@ -1,6 +1,6 @@
 # Smart contract payment system
 
-In order to run the tests:
+## In order to run the tests:
 
 npm run test
 
