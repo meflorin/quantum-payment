@@ -1,0 +1,20 @@
+FROM node:10-alpine@sha256:409726705cd454a527af5032f67ef068556f10d3c40bb4cc5c6ed875e686b00e as build-env
+WORKDIR /usr/src/app
+
+RUN apk add --update-cache --no-cache --virtual deps \
+    curl make gcc g++ git python libc6-compat bash
+
+# use changes to package(-lock).json to force Docker not to use the cache
+# when we change our application's nodejs dependencies
+# this way this step is not ran each time we change src files but only
+# when package(-lock).json change
+# install *ALL* node module dependencies including devDependencies
+# because we need them for testing step
+COPY package.json yarn.lock /usr/src/app/
+RUN cd /usr/src/app && \
+  yarn install
+
+# copy the rest of the files
+COPY . ./
+
+ENTRYPOINT ["/usr/src/app/scripts/build.sh"]

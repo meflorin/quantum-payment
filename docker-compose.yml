@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+  quantum-payment:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    # command: "tail -f  /dev/null"
+    entrypoint: "tail -f  /dev/null"
+    volumes:
+      - "./:/usr/src/app"
+      - node_modules_payment:/usr/src/app/node_modules
+
+# mount an empty named volume over /app/node_modules
+# this achieves 2 things: 1) ignore host's node_modules (if present);
+# 2) keep node_modules persistent between docker-compose up runs
+# @see https://stackoverflow.com/questions/29181032/add-a-volume-to-docker-but-exclude-a-sub-folder
+volumes:
+  node_modules_payment:
